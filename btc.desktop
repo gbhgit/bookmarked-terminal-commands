@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=btc
+Comment=Bookmarked Terminal Commands, DEB packge
+Exec=btc
+Icon=/usr/share/icons/gnome/48x48/apps/file-manager.png
+Category=Utility;
+Terminal=true
+StartupNotify=true
+StartupWMClass=btc
