@@ -4,7 +4,7 @@ import sys
 import time
 import json
 import argparse
-
+import logging
 
 class BookmarkedTerminalCommands:
     FAIL = "\033[91m"
