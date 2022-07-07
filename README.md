@@ -14,9 +14,11 @@ If you need to type extensive commands on a daily basis, whether to connect to a
 - `btcmd -l` 
 #### To save a command with an nickname, type in terminal:
 - `btcmd -s 'COMMAND_YOU_WANT_TO_SAVE' -n COMMAND_NICKNAME`
-#### To run the command by the nickname, type in terminal:
-- `btcmd -r COMMAND_NICKNAME`, run the command by the nickname
+#### To rename a command's nickname, type in terminal:
+- `btcmd -n 'COMMAND_YOU_WANT_TO_RENAME'`
 #### To delete a saved command, type in terminal:
 - `btcmd -d COMMAND_NICKNAME` 
+#### To run the command by the nickname, type in terminal:
+- `btcmd -r COMMAND_NICKNAME` or simply `btcmd COMMAND_NICKNAME`
 #### To see help details, type in terminal:
 - `btcmd -h`
