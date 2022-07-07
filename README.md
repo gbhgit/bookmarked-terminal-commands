@@ -1,16 +1,5 @@
-# Bookmarked Terminal Commands
+# Bookmarked Terminal Commands - btcmd
 
-## Build to generate DEB file
-- sudo apt-get update -y
-- sudo apt-get install -y python-stdeb
-- sudo apt-get update -y
-- sudo apt-get install dh-python
-- python3 setup.py --command-packages=stdeb.command bdist_deb
+##### If you need to type extensive commands on a daily basis, whether to connect to a server or to clean up unused container images, this tool is for you. You can mark your favorite commands and call them from a simple shortcut, all in the comfort of an installation via pip.
 
-## Instalation
-
-## Usage
-
-## License
-
-## Contact
+##### After installing run: `btcmd -h` for more details. It's very easy to use.
