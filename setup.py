@@ -5,11 +5,11 @@ with open("README.desc") as file:
 
 setup(
   name = 'btcmd', # How you named your package folder (MyLib)
-  long_description=long_description,
   packages = ['btcmd'], # Chose the same as "name"
   version = '0.3', # Start with a small number and increase it with every change you make
   license='MIT', # Chose a license from here: https://help.github.com/articles/licensing-a-repository
-  description = 'Bookmark Terminal Commands', # Give a short description about your library
+  description = 'Bookmark Terminal Commands - btcmd', # Give a short description about your library
+  long_description=long_description, # Give a long description about your library
   author = 'Gabriel Bandeira and Wellington Mendes', # Type in your name
   author_email = 'wellmend0@gmail.com', # Type in your E-Mail
   url = 'https://github.com/gbhgit/bookmarked-terminal-commands', # Provide either the link to your github or to your website
