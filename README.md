@@ -1,16 +1,22 @@
-# Bookmarked Terminal Commands
+# Bookmarked Terminal Commands - btcmd
+## About
+If you need to type extensive commands on a daily basis, whether to connect to a server or to clean up unused container images, this tool is for you. You can mark your favorite commands and call them from a simple shortcut, all in the comfort of an installation via pip.
 
-## Build to generate DEB file
-- sudo apt-get update -y
-- sudo apt-get install -y python-stdeb
-- sudo apt-get update -y
-- sudo apt-get install dh-python
-- python3 setup.py --command-packages=stdeb.command bdist_deb
+## Requirements 
+- Python
 
-## Instalation
+## Installation
+- Open your terminal and type `pip install btcmd`
+- After installing run: `btcmd -h` for more details. It's very easy to use.
 
-## Usage
-
-## License
-
-## Contact
+## How to use
+#### To list all saved commands, type in terminal:
+- `btcmd -l` 
+#### To save a command with an nickname, type in terminal:
+- `btcmd -s 'COMMAND_YOU_WANT_TO_SAVE' -n COMMAND_NICKNAME`
+#### To run the command by the nickname, type in terminal:
+- `btcmd -r COMMAND_NICKNAME`, run the command by the nickname
+#### To delete a saved command, type in terminal:
+- `btcmd -d COMMAND_NICKNAME` 
+#### To see help details, type in terminal:
+- `btcmd -h`
