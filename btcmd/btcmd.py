@@ -4,7 +4,6 @@ import sys
 import time
 import json
 import argparse
-import logging
 
 class BookmarkedTerminalCommands:
     FAIL = "\033[91m"
@@ -19,12 +18,16 @@ class BookmarkedTerminalCommands:
 
     def get_arguments(self):
         parser = argparse.ArgumentParser()
-        parser.add_argument("-l", action="store_true")
+        parser.add_argument("-l", "--list", dest="list", help="List saved commands", action="store_true")
         parser.add_argument("-s", "--save", dest="save", help="Save a command")
         parser.add_argument("-d", "--delete", dest="delete", help="Delete a command")
-        parser.add_argument("-n", "--nick", dest="nick", help="Nick of the command")
-        parser.add_argument("-r", "--run", dest="run", help="Run a command by the nick")
-        options = parser.parse_args()
+        parser.add_argument("-n", "--nick", dest="nickname", help="Rename or set a command's nickname")
+        parser.add_argument("-r", "--run", dest="run", help="Run a saved command by its nickname")
+
+        options, arg = parser.parse_known_args()
+
+        if len(arg)==1 and type(arg[0])==str and options.run is None:
+            options.run = arg[0]
         if options.save and options.delete:
             parser.error(
                 self.FAIL
@@ -35,7 +38,7 @@ class BookmarkedTerminalCommands:
             parser.error(
                 self.FAIL
                 + self.BOLD
-                + "[-] Please specify the nick of command to run and not use in this case the -d and -s, use --help for more info."
+                + "[-] Please specify the nickname of command to run and not use in this case the -d and -s, use --help for more info."
             )
         return options
 
@@ -55,7 +58,7 @@ class BookmarkedTerminalCommands:
         if nick and nick not in favorites:
             favorites[nick] = command
             print(self.OK_CYAN + "[+] New command saved.")
-            print(self.OK_GREEN + "nick: " + nick + ", command: " + command)
+            print(self.OK_GREEN + "nickname: " + nick + ", command: " + command)
         elif nick and nick in favorites:
             print(
                 self.FAIL
@@ -71,7 +74,7 @@ class BookmarkedTerminalCommands:
 
     def save_favorite(self, options):
         favorites = self.load_favorites()
-        self.set_favorite(options.nick, options.save, favorites)
+        self.set_favorite(options.nickname, options.save, favorites)
 
         with open(self.store_file, "w") as outfile:
             json.dump(favorites, outfile)
@@ -82,7 +85,7 @@ class BookmarkedTerminalCommands:
             print(self.OK_CYAN + "[+] Command deleted:")
             print(
                 self.FAIL
-                + "nick: "
+                + "nickname: "
                 + options.delete
                 + ", command: "
                 + favorites[options.delete]
@@ -97,7 +100,7 @@ class BookmarkedTerminalCommands:
         print(self.OK_CYAN + "[+] Favorite commands:")
         for key in favorites.keys():
             swap = self.OK_GREEN if swap == self.ORANGE else self.ORANGE
-            print(swap + "nick: " + key + ", command: " + favorites[key])
+            print(swap + "nickname: " + key + ", command: " + favorites[key])
 
     def run_command(self, options):
         favorites = self.load_favorites()
@@ -110,6 +113,37 @@ class BookmarkedTerminalCommands:
                 + "[-] Please specify a command to run by a --nick, use --help for more info."
             )
 
+    def rename_command(self, options):
+        favorites = self.load_favorites()
+    
+        if options.nickname not in favorites:
+            print(
+                self.FAIL
+                + self.BOLD
+                + "[-] Please specify other nickname because this nickname does not exist, use --help for more info."
+            )
+        else:
+            try:
+                nickname = input('Insert the new nickname: ')
+                favorites[nickname] = favorites.pop(options.nickname)
+                print(self.OK_CYAN + "[+] Command renamed:")
+                print(
+                    self.OK_GREEN
+                    + "nickname: "
+                    + nickname
+                    + ", command: "
+                    + favorites[nickname]
+                )
+            except:
+                print(
+                    self.FAIL
+                    + self.BOLD
+                    + "[-] Error while trying to define a new nickname, use --help for more info."
+                )
+
+            with open(self.store_file, "w") as outfile:
+                json.dump(favorites, outfile)
+
     def run(self, options):
         self.setup_temp_files()
 
@@ -119,22 +153,35 @@ class BookmarkedTerminalCommands:
             self.save_favorite(options)
         elif options.delete:
             self.delete_favorite(options)
-        if options.l:
-            self.show_favorites()
+        elif options.nickname:
+            self.rename_command(options)
+        elif not options.list:
+            self.script_header()
 
-    def slow_print(self, s):
-        for c in s + "\n":
-            sys.stdout.write(c)
-            sys.stdout.flush()
-            time.sleep(0.0 / 100)
+        if options.list:
+            self.show_favorites()
 
     def script_header(self):
         # see: https://patorjk.com/software/taag/
-        self.slow_print(
-            """\033[1;31m \033[95m
-        ╔═╗┌─┐┬  ┬┌─┐┬─┐┬┌┬┐┌─┐  ╔═╗┌─┐┌┬┐┌┬┐┌─┐┌┐┌┌┬┐┌─┐
-        ╠╣ ├─┤└┐┌┘│ │├┬┘│ │ ├┤   ║  │ │││││││├─┤│││ ││└─┐
-        ╚  ┴ ┴ └┘ └─┘┴└─┴ ┴ └─┘  ╚═╝└─┘┴ ┴┴ ┴┴ ┴┘└┘─┴┘└─┘\033[92m
+        def slow_print(s):
+            for c in s + "\n":
+                sys.stdout.write(c)
+                sys.stdout.flush()
+                time.sleep(0.0 / 100)
+                
+        slow_print(
+        """ \033[1;31m \033[95m
+            ╔═╗┌─┐┬  ┬┌─┐┬─┐┬┌┬┐┌─┐  ╔═╗┌─┐┌┬┐┌┬┐┌─┐┌┐┌┌┬┐┌─┐
+            ╠╣ ├─┤└┐┌┘│ │├┬┘│ │ ├┤   ║  │ │││││││├─┤│││ ││└─┐
+            ╚  ┴ ┴ └┘ └─┘┴└─┴ ┴ └─┘  ╚═╝└─┘┴ ┴┴ ┴┴ ┴┘└┘─┴┘└─┘\033[92m
         """
         )
 
+def main():
+    favorite_commands_manager = BookmarkedTerminalCommands()
+    options = favorite_commands_manager.get_arguments()
+    favorite_commands_manager.run(options)
+
+
+if __name__ == "__main__":
+    main()
